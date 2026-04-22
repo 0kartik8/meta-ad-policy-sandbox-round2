@@ -1,0 +1,20 @@
+name: meta-ad-policy-env
+version: 0.2.3
+description: "A Reinforcement Learning sandbox for multimodal ad-policy moderation."
+
+server:
+  host: "0.0.0.0"
+  port: 8000
+
+tasks:
+  - task_id: "task_1_healthcare"
+    description: "Evaluate ads for unapproved medical claims, pharmaceuticals, and subtle dog whistles."
+    
+  - task_id: "task_2_financial"
+    description: "Evaluate ads for predatory financial services, scams, and high-pressure tactics."
+    
+  - task_id: "task_3_multimodal"
+    description: "Detect policy violations hidden entirely within visual elements that bypass text filters."
+
+  - task_id: "task_4_targeting"
+    description: "Identify illegal demographic targeting (e.g., adult financial services targeting minors)."
