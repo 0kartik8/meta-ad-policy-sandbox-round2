@@ -113,7 +113,9 @@ class AdPolicyEnvironment(Environment):
                 # Return ambiguous category info, NOT ground truth
                 category = self.current_ad.get("category", "unknown")
                 domain_age = self.current_ad.get("domain_age_days", 365)
-                message = f"Domain age: {domain_age} days. Category: {category}."
+                keywords = self.current_ad.get("landing_risk_keywords", [])
+                kw_str = ", ".join(keywords) if keywords else "none"
+                message = f"Domain age: {domain_age} days. Category: {category}. Keywords found: {kw_str}."
                 
             elif act_type == "request_id_verification":
                 targeting = self.current_ad.get("targeting_data", {})

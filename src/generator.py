@@ -84,11 +84,41 @@ class AdGenerator:
             age_limit = 15 # The trap!
             is_violation = True
 
-        trust_score = round(random.uniform(0.1, 0.99), 2)
+        # Apply policy drift / adversarial escalation
+        if difficulty == "hard" or random.random() < 0.3:
+            def apply_drift(text):
+                replacements = {'a': '@', 'e': '3', 'i': '1', 'o': '0', 's': '$'}
+                for k, v in replacements.items():
+                    if random.random() < 0.4:
+                        text = text.replace(k, v).replace(k.upper(), v)
+                return text
+            headline = apply_drift(headline)
+            body = apply_drift(body)
+
+        # Trust score logic: correlated with violation but not purely random
+        if is_violation:
+            trust_score = round(random.uniform(0.1, 0.45), 2)
+        else:
+            trust_score = round(random.uniform(0.55, 0.99), 2)
             
         # ✅ FIX: Indented to be inside the generate_random_ad function!
         ad_id = str(uuid.uuid4())[:8]
-        advertiser_id = f"bad_actor_{ad_id}" if is_violation else ad_id
+        # Remove ground truth leak
+        advertiser_id = ad_id
+        
+        # Add landing_risk_keywords based on category and violation
+        if is_violation:
+            if category == "HEALTHCARE":
+                kw_pool = ["cure", "guarantee", "miracle", "secret", "diet"]
+            elif category == "FINANCIAL":
+                kw_pool = ["risk-free", "guaranteed", "crypto", "100x", "return"]
+            else:
+                kw_pool = ["scam", "urgent", "wire", "click"]
+        else:
+            kw_pool = ["info", "contact", "about", "terms", "privacy", "team"]
+            
+        landing_risk_keywords = random.sample(kw_pool, k=min(2, len(kw_pool)))
+
         return {
             "ad_id": ad_id,
             "advertiser_id": advertiser_id,
@@ -101,5 +131,6 @@ class AdGenerator:
             "image_url": f"https://mock-meta.com/img/{uuid.uuid4()}.jpg",
             "ground_truth": is_violation,
             "category": category,
-            "vlm_desc": vlm_desc
+            "vlm_desc": vlm_desc,
+            "landing_risk_keywords": landing_risk_keywords
         }
