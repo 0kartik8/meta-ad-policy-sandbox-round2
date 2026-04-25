@@ -11,6 +11,10 @@ app = create_fastapi_app(
     AdObservation
 )
 
-if __name__ == "__main__":
+def main():
     print("🚀 Starting Meta Ad-Policy Sandbox on http://localhost:8000")
     uvicorn.run(app, host="0.0.0.0", port=8000)
+
+
+if __name__ == "__main__":
+    main()
